@@ -74,7 +74,7 @@ This guide will help you deploy the TextConverter application (both frontend and
 ### Backend Alternatives
 - **Railway**: Offers simple deployment and a generous free tier
 - **Fly.io**: Good free tier with global deployment options
-- **Cyclic.sh**: Easy deployment from GitHub
+- **Cyclic.sh**: Easy deployment from GitHub        
 
 ### Frontend Alternatives
 - **Vercel**: Great for React apps with an excellent free tier

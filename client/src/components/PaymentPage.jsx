@@ -60,7 +60,7 @@ const PaymentPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/verify/${token}`)
+        const response = await axios.get(`https://textconverter.onrender.com/api/verify/${token}`)
         setData(response.data.data)
       } catch (err) {
         console.error('Error fetching data:', err)
@@ -83,7 +83,7 @@ const PaymentPage = () => {
     
     try {
       // Generate UPI payment link
-      const response = await axios.post('http://localhost:5000/api/payment/upi-link', {
+      const response = await axios.post('https://textconverter.onrender.com/api/payment/upi-link', {
         amount,
         upiId,
         name: 'Text Converter'
@@ -101,7 +101,7 @@ const PaymentPage = () => {
       }
       
       // Record the payment attempt
-      await axios.post('http://localhost:5000/api/payment/success', {
+      await axios.post('https://textconverter.onrender.com/api/payment/success', {
         amount,
         email: data?.email
       })

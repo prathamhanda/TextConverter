@@ -17,7 +17,9 @@ node_modules/
 .env.test.local
 .env.production.local
 */.env
-*/.env.*
+# Allow example env files
+!.env.example
+!*/.env.example
 
 # Logs
 logs
@@ -54,7 +56,8 @@ pids
 *.pid.lock
 
 # Yarn
+GITHUB_INSTRUCTIONS.md
 .yarn-integrity
-
+DEPLOYMENT_GUIDE.md
 # Cursor specific files
 .qodo/ 
