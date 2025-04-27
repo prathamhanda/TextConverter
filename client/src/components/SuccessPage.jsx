@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import {
   Box,
   Container,
@@ -6,9 +6,15 @@ import {
   Button,
   Stack,
   SvgIcon,
-  useTheme
+  useTheme,
+  Paper,
+  Divider,
+  Grid
 } from '@mui/material'
 import { motion } from 'framer-motion'
+import { useState, useEffect } from 'react'
+import DownloadIcon from '@mui/icons-material/Download'
+import HomeIcon from '@mui/icons-material/Home'
 
 // Simple checkmark icon
 const CheckmarkIcon = (props) => (
@@ -23,16 +29,39 @@ const CheckmarkIcon = (props) => (
 // Animation components with Framer Motion
 const MotionBox = motion(Box)
 const MotionTypography = motion(Typography)
+const MotionPaper = motion(Paper)
 
 const SuccessPage = () => {
   const navigate = useNavigate()
+  const location = useLocation()
   const theme = useTheme()
   const iconColor = theme.palette.success.main
   
-  // Confetti animation
-  const confettiVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 0.5 } },
+  // Get text data from location state
+  const [text, setText] = useState('')
+  const [email, setEmail] = useState('')
+  const [amount, setAmount] = useState(0)
+  
+  useEffect(() => {
+    // Get data from location state or redirect to home if it doesn't exist
+    if (location.state?.text) {
+      setText(location.state.text)
+      setEmail(location.state.email || '')
+      setAmount(location.state.amount || 0)
+    } else {
+      navigate('/')
+    }
+  }, [location, navigate])
+  
+  // Function to download text as a file
+  const handleDownload = () => {
+    const element = document.createElement('a')
+    const file = new Blob([text], {type: 'text/plain'})
+    element.href = URL.createObjectURL(file)
+    element.download = 'converted_text.txt'
+    document.body.appendChild(element)
+    element.click()
+    document.body.removeChild(element)
   }
   
   return (
@@ -75,7 +104,7 @@ const SuccessPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.8 }}
         >
-          Payment Successful!
+          {amount > 0 ? 'Payment Successful!' : 'Conversion Completed!'}
         </MotionTypography>
         
         <MotionTypography
@@ -86,82 +115,103 @@ const SuccessPage = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.8 }}
         >
-          Thank you for supporting our service.
+          {amount > 0 
+            ? `Thank you for your payment of ₹${amount}.` 
+            : 'Your text has been successfully converted.'}
         </MotionTypography>
         
-        <MotionTypography
-          variant="body1"
-          align="center"
-          color="text.secondary"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.7, duration: 0.8 }}
-          sx={{ maxWidth: 500 }}
+        {amount > 0 && (
+          <MotionTypography
+            variant="body1"
+            align="center"
+            color="text.secondary"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7, duration: 0.8 }}
+            sx={{ maxWidth: 500 }}
+          >
+            Your payment has been processed successfully. We appreciate your contribution!
+          </MotionTypography>
+        )}
+        
+        {/* Display the converted text */}
+        <MotionPaper
+          elevation={3}
+          sx={{ p: 3, width: '100%', mb: 2 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7, duration: 0.5 }}
         >
-          Your payment has been processed successfully. We appreciate your contribution!
-        </MotionTypography>
+          <Typography variant="h6" color="primary" gutterBottom fontWeight="bold">
+            Converted Text Result
+          </Typography>
+          {email && (
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              Email: {email}
+            </Typography>
+          )}
+          
+          <Divider sx={{ my: 2 }} />
+          
+          <Box
+            sx={{
+              p: 2,
+              bgcolor: 'grey.50',
+              borderRadius: 1,
+              border: '1px solid',
+              borderColor: 'grey.200',
+              fontFamily: 'monospace',
+              fontSize: '0.875rem',
+              mb: 2,
+              overflowX: 'auto',
+              maxHeight: '300px',
+              overflowY: 'auto'
+            }}
+          >
+            {text}
+          </Box>
+          
+          <Button
+            variant="contained"
+            color="secondary"
+            startIcon={<DownloadIcon />}
+            onClick={handleDownload}
+            sx={{ mt: 2 }}
+          >
+            Download as Text File
+          </Button>
+        </MotionPaper>
         
         <MotionBox
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.9, duration: 0.5 }}
         >
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            onClick={() => navigate('/')}
-            sx={{ 
-              mt: 3, 
-              fontWeight: 'bold',
-              py: 1.5,
-              px: 4,
-              fontSize: '1rem',
-              boxShadow: 3,
-              '&:hover': {
-                transform: 'translateY(-2px)',
-                boxShadow: 5,
-              }
-            }}
-          >
-            Convert Another Text
-          </Button>
+          <Grid container spacing={2} justifyContent="center">
+            <Grid item>
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                startIcon={<HomeIcon />}
+                onClick={() => navigate('/')}
+                sx={{ 
+                  fontWeight: 'bold',
+                  py: 1.5,
+                  px: 4,
+                  fontSize: '1rem',
+                  boxShadow: 3,
+                  '&:hover': {
+                    transform: 'translateY(-2px)',
+                    boxShadow: 5,
+                  }
+                }}
+              >
+                Convert Another Text
+              </Button>
+            </Grid>
+          </Grid>
         </MotionBox>
-        
-        {/* Confetti Elements */}
-        <Box position="absolute" top={0} left={0} right={0} bottom={0} overflow="hidden" sx={{ pointerEvents: 'none' }}>
-          {[...Array(20)].map((_, i) => (
-            <MotionBox
-              key={i}
-              position="absolute"
-              sx={{
-                top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`,
-                width: `${Math.random() * 10 + 5}px`,
-                height: `${Math.random() * 10 + 5}px`,
-                borderRadius: '50%',
-                bgcolor: [
-                  theme.palette.success.main,
-                  theme.palette.primary.main,
-                  theme.palette.secondary.main,
-                  theme.palette.warning.main,
-                  theme.palette.info.main
-                ][Math.floor(Math.random() * 5)],
-                zIndex: -1,
-              }}
-              initial="hidden"
-              animate="visible"
-              variants={confettiVariants}
-              transition={{
-                delay: Math.random() * 0.5,
-                duration: 0.5,
-                repeat: Infinity,
-                repeatType: "reverse",
-                repeatDelay: Math.random() * 2,
-              }}
-            />
-          ))}
-        </Box>
 
         <Box textAlign="center" sx={{ opacity: 0.8, mt: 4 }}>
           <Typography variant="body2" color="text.secondary">

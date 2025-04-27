@@ -79,6 +79,18 @@ const PaymentPage = () => {
   }
   
   const initiatePayment = async () => {
+    if (amount <= 0) {
+      // If amount is 0, directly go to success page with the converted text
+      navigate('/success', { 
+        state: { 
+          text: data?.text, 
+          email: data?.email,
+          amount: 0
+        } 
+      })
+      return
+    }
+    
     setPaymentLoading(true)
     
     try {
@@ -120,7 +132,20 @@ const PaymentPage = () => {
   
   const handlePaymentSuccess = () => {
     setQrDialogOpen(false)
-    navigate('/success')
+    navigate('/success', { 
+      state: { 
+        text: data?.text, 
+        email: data?.email,
+        amount: amount
+      } 
+    })
+  }
+  
+  // Function to generate a preview of the text
+  const getTextPreview = (text) => {
+    if (!text) return '';
+    const previewLength = Math.min(30, text.length);
+    return text.substring(0, previewLength) + (text.length > previewLength ? '...' : '');
   }
   
   if (loading) {
@@ -221,7 +246,7 @@ const PaymentPage = () => {
           <Divider sx={{ my: 2 }} />
           
           <Typography variant="h6" color="primary" gutterBottom fontWeight="bold">
-            Converted Result
+            Converted Result Preview
           </Typography>
           <Box
             sx={{
@@ -236,7 +261,51 @@ const PaymentPage = () => {
               overflowX: 'auto'
             }}
           >
-            {data?.text}
+            {getTextPreview(data?.text)}
+            <Box 
+              sx={{ 
+                mt: 1, 
+                p: 2, 
+                bgcolor: 'grey.100',
+                borderRadius: 1,
+                position: 'relative',
+                height: '50px',
+                overflow: 'hidden'
+              }}
+            >
+              <Box 
+                sx={{ 
+                  filter: 'blur(5px)',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                {data?.text}
+              </Box>
+              <Box 
+                sx={{ 
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: 'rgba(255,255,255,0.4)'
+                }}
+              >
+                <Typography variant="body2" fontWeight="bold" color="primary">
+                  Complete the payment to view full result
+                </Typography>
+              </Box>
+            </Box>
           </Box>
         </Paper>
         
@@ -315,18 +384,17 @@ const PaymentPage = () => {
               color="primary"
               size="large"
               onClick={initiatePayment}
-              disabled={paymentLoading || amount <= 0}
+              disabled={paymentLoading}
               className="animate-pulse"
               sx={{ 
                 py: 1.5,
                 fontSize: '1rem',
-                mt: 2,
-                opacity: amount <= 0 ? 0.6 : 1
+                mt: 2
               }}
             >
               {paymentLoading ? 
                 <CircularProgress size={24} color="inherit" /> : 
-                amount <= 0 ? 'Free - No Payment Needed' : `Pay with UPI ₹${amount}`
+                amount <= 0 ? 'Continue Without Payment' : `Pay with UPI ₹${amount}`
               }
             </Button>
             
