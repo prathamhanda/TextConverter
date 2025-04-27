@@ -1,0 +1,26 @@
+{
+  "name": "text-converter",
+  "version": "1.0.0",
+  "description": "Text converter application with UPI payment integration",
+  "main": "index.js",
+  "scripts": {
+    "client": "cd client && npm run dev",
+    "server": "cd server && npm run dev",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "install-all": "npm i && npm i --prefix client && npm i --prefix server",
+    "build": "cd client && npm run build",
+    "start": "cd server && npm start"
+  },
+  "keywords": [
+    "text-converter",
+    "upi",
+    "payment",
+    "react",
+    "nodejs"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+} 
