@@ -315,25 +315,28 @@ const PaymentPage = () => {
               color="primary"
               size="large"
               onClick={initiatePayment}
-              disabled={paymentLoading}
+              disabled={paymentLoading || amount <= 0}
               className="animate-pulse"
               sx={{ 
                 py: 1.5,
                 fontSize: '1rem',
-                mt: 2
+                mt: 2,
+                opacity: amount <= 0 ? 0.6 : 1
               }}
             >
               {paymentLoading ? 
                 <CircularProgress size={24} color="inherit" /> : 
-                `Pay with UPI ₹${amount}`
+                amount <= 0 ? 'Free - No Payment Needed' : `Pay with UPI ₹${amount}`
               }
             </Button>
             
-            <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 2 }}>
-              {isMobile ? 
-                "You'll be redirected to your UPI app to complete payment" : 
-                "A QR code will be displayed for payment"}
-            </Typography>
+            {amount > 0 && (
+              <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 2 }}>
+                {isMobile ? 
+                  "You'll be redirected to your UPI app to complete payment" : 
+                  "A QR code will be displayed for payment"}
+              </Typography>
+            )}
           </Stack>
         </Paper>
         
