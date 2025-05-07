@@ -2,6 +2,8 @@
 
 A web application that converts user-provided text to uppercase, sends a link via email, and includes a UPI payment option that accepts Indian UPI payments.
 
+<img src="https://raw.githubusercontent.com/prathamhanda/TextConverter/refs/heads/main/yoyo.png">
+
 ## Features
 
 - React.js frontend with animations (using Material-UI and Framer Motion)
