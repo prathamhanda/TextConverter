@@ -35,7 +35,20 @@ project/
 └── README.md
 ```
 
-## Setup Instructions
+## **4. Live Link**
+
+Link: [TEXT CONVERTER](https://text007.netlify.app/)  
+
+
+---
+## **5. Screenshot of the Interface**
+
+<p align="center" style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+
+  <img src="https://github.com/prathamhanda/TextConverter/blob/main/home%20page.png?raw=true" width="45%" height="260px" style="object-fit: cover; margin-right: 10px;" />
+  <img src="https://github.com/prathamhanda/TextConverter/blob/main/success.png?raw=true" width="45%" height="260px" style="object-fit: cover;" />
+
+</p>
 
 ### Prerequisites
 
